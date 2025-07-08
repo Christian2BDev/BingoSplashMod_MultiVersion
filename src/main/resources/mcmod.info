@@ -1,0 +1,18 @@
+[
+  {
+    "modid": "bingosplash",
+    "name": "BingoSplash",
+    "description": "A Forge mod ",
+    "version": "${version}",
+    "mcversion": "${mcVersionStr}",
+    "url": "",
+    "updateUrl": "",
+    "authorList": [
+      "Christian2B"
+    ],
+    "credits": "",
+    "logoFile": "",
+    "screenshots": [],
+    "dependencies": []
+  }
+]

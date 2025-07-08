@@ -1,0 +1,26 @@
+modLoader="javafml" #mandatory
+loaderVersion="[36,)" #mandatory — Forge 1.16.5 uses loader version 36
+license="All Rights Reserved"
+
+[[mods]]
+modId="bingosplash" #mandatory — lowercase and no spaces!
+version="1.0.0" #mandatory — semantic versioning recommended
+displayName="Bingo Splash" #mandatory
+authors="Christian" #optional
+description='''A fun and competitive Bingo mod for Minecraft 1.16.5.
+Compete with your friends to complete the bingo board in the fastest time possible!
+'''
+
+[[dependencies.bingosplash]]
+modId="forge"
+mandatory=true
+versionRange="[36.2.0,)"
+ordering="NONE"
+side="BOTH"
+
+[[dependencies.bingosplash]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.16.5,1.17)"
+ordering="NONE"
+side="BOTH"

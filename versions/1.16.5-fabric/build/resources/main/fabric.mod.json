@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "bingosplash",
+  "version": "unspecified",
+  "name": "BingoSplash",
+  "description": "Bingo Splash Mod",
+  "authors": [],
+  "contact": {},
+  "license": "All-Rights-Reserved",
+  "icon": "assets/bingosplash/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "main": [
+      "com.heckvision.bingosplash.BingoSplash"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.13.3",
+    "fabric": "*",
+    "minecraft": "1.16.5"
+  }
+}
