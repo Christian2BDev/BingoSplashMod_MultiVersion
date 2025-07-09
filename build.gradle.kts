@@ -13,7 +13,11 @@ base.archivesName.set("$modBaseName-${platform.mcVersionStr}")
 
 loom {
     noServerRunConfigs()
-
+    runConfigs{
+        "client"{
+            vmArgs("-Dfile.encoding=UTF-8")
+        }
+    }
 }
 
 

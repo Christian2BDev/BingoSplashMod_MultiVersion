@@ -1,0 +1,16 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" factoryName="Application" name="Minecraft Client (:1.16.5-forge)" type="Application">
+    <option name="MAIN_CLASS_NAME" value="net.fabricmc.devlaunchinjector.Main"/>
+    <module name="BingoSplashMod_MultiVersion.1.16.5-forge.main"/>
+    <option name="PROGRAM_PARAMETERS" value=""/>
+    <option name="VM_PARAMETERS" value="-Dfabric.dli.config=/Users/christian/GithubDesktop/ooops/BingoSplashMod_MultiVersion/versions/1.16.5-forge/.gradle/loom-cache/launch.cfg -Dfabric.dli.env=client -XX:+IgnoreUnrecognizedVMOptions --add-exports=java.base/sun.security.util=ALL-UNNAMED --add-exports=jdk.naming.dns/com.sun.jndi.dns=java.naming --add-opens=java.base/java.util.jar=ALL-UNNAMED -XstartOnFirstThread -XstartOnFirstThread -XstartOnFirstThread -XstartOnFirstThread -Dfabric.dli.main=net.minecraftforge.userdev.LaunchTesting"/>
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/versions/1.16.5-forge/run/"/>
+    <method v="2">
+      <option enabled="true" name="Make"/>
+    </method>
+    <envs>
+      <env name="MOD_CLASSES" value="main%%/Users/christian/GithubDesktop/ooops/BingoSplashMod_MultiVersion/versions/1.16.5-forge/build/resources/main:main%%/Users/christian/GithubDesktop/ooops/BingoSplashMod_MultiVersion/versions/1.16.5-forge/build/classes/java/main:main%%/Users/christian/GithubDesktop/ooops/BingoSplashMod_MultiVersion/versions/1.16.5-forge/out/production/classes:main%%/Users/christian/GithubDesktop/ooops/BingoSplashMod_MultiVersion/versions/1.16.5-forge/out/production/resources"/><env name="MCP_MAPPINGS" value="loom.stub"/><env name="MCP_VERSION" value="20210115.111550"/><env name="FORGE_VERSION" value="36.2.39"/><env name="assetIndex" value="1.16.5-1.16"/><env name="assetDirectory" value="/Users/christian/.gradle/caches/essential-loom/assets"/><env name="nativesDirectory" value="/Users/christian/GithubDesktop/ooops/BingoSplashMod_MultiVersion/.gradle/loom-cache/natives/1.16.5"/><env name="FORGE_GROUP" value="net.minecraftforge"/><env name="target" value="fmluserdevclient"/><env name="MC_VERSION" value="1.16.5"/>
+    </envs>
+    <shortenClasspath name="ARGS_FILE"/>
+  <classpathModifications/></configuration>
+</component>

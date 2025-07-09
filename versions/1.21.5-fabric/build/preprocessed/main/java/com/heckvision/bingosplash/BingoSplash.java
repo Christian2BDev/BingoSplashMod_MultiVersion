@@ -49,7 +49,7 @@ implements ModInitializer
             //$$ FMLCommonSetupEvent event
             //#endif
     ) {
-        System.out.println("test");
+        System.out.println("["+ NAME +"] Mod initialized");
         
     }
 

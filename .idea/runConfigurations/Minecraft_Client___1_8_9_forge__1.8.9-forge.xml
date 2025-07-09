@@ -1,0 +1,16 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" factoryName="Application" name="Minecraft Client (:1.8.9-forge)" type="Application">
+    <option name="MAIN_CLASS_NAME" value="net.fabricmc.devlaunchinjector.Main"/>
+    <module name="BingoSplashMod_MultiVersion.1.8.9-forge.main"/>
+    <option name="PROGRAM_PARAMETERS" value=""/>
+    <option name="VM_PARAMETERS" value="-Dfabric.dli.config=/Users/christian/GithubDesktop/ooops/BingoSplashMod_MultiVersion/versions/1.8.9-forge/.gradle/loom-cache/launch.cfg -Dfabric.dli.env=client -Dfabric.dli.main=net.minecraft.launchwrapper.Launch"/>
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/versions/1.8.9-forge/run/"/>
+    <method v="2">
+      <option enabled="true" name="Make"/>
+    </method>
+    <envs>
+      <env name="MOD_CLASSES" value="main%%/Users/christian/GithubDesktop/ooops/BingoSplashMod_MultiVersion/versions/1.8.9-forge/build/resources/main:main%%/Users/christian/GithubDesktop/ooops/BingoSplashMod_MultiVersion/versions/1.8.9-forge/build/classes/java/main:main%%/Users/christian/GithubDesktop/ooops/BingoSplashMod_MultiVersion/versions/1.8.9-forge/out/production/classes:main%%/Users/christian/GithubDesktop/ooops/BingoSplashMod_MultiVersion/versions/1.8.9-forge/out/production/resources"/>
+    </envs>
+    <shortenClasspath name="ARGS_FILE"/>
+  <classpathModifications/></configuration>
+</component>
