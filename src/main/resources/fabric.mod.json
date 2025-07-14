@@ -18,5 +18,8 @@
     "fabricloader": ">=0.13.3",
     "fabric": "*",
     "minecraft": "${mcVersionStr}"
-  }
+  },
+  "mixins": [
+    "mixins.bingosplash.json"
+  ]
 }

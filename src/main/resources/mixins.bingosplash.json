@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "minVersion": "0.7",
+  "package": "com.heckvision.bingosplash.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "mixins.bingosplash.refmap.json",
+  "mixins": [
+  ],
+  "client": [
+    "MixinClientShutdown",
+    "MixinClientTick"
+  ],
+  "server": []
+}

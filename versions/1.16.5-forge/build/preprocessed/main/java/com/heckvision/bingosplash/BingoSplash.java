@@ -1,6 +1,7 @@
 package com.heckvision.bingosplash;
 
 //#if MC==10809
+//$$
 //$$ import net.minecraftforge.fml.common.Mod;
 //$$ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 //#endif
@@ -13,6 +14,11 @@ import net.minecraftforge.fml.common.Mod;
 //#if FABRIC
 //$$ import net.fabricmc.api.ModInitializer;
 //#endif
+
+
+//always import:
+import com.heckvision.bingosplash.utils.TickAPI;
+import com.heckvision.bingosplash.core.ExecuteTasks;
 
 
 //#if MC==10809
@@ -30,7 +36,7 @@ public class BingoSplash
     public static final String NAME = "BingoSplash";
     public static final String MODID = "bingosplash";
     //#if MC==10809
-    //$$ @Mod.Instance("BingoSplash.MODID")
+    //$$ @Mod.Instance(BingoSplash.MODID)
     //$$ public static BingoSplash instance;
     //#endif
 
@@ -50,8 +56,13 @@ public class BingoSplash
             //#endif
     ) {
         System.out.println("["+ NAME +"] Mod initialized");
-        
+        new ExecuteTasks();
+        TickAPI.registerClientTickListener(() -> {
+            //System.out.println("Tick!");
+        });
     }
+
+
 
     //#if FORGE && MC==11605
      public BingoSplash() {

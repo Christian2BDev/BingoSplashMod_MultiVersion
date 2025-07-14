@@ -16,7 +16,7 @@ modId="forge"
 mandatory=true
 versionRange="[36.2.0,)"
 ordering="NONE"
-side="BOTH"
+side="CLIENT"
 
 [[dependencies.bingosplash]]
 modId="minecraft"
