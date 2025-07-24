@@ -1,7 +1,6 @@
 package com.heckvision.bingosplash;
 
 //#if MC==10809
-//$$
 //$$ import net.minecraftforge.fml.common.Mod;
 //$$ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 //#endif
@@ -18,6 +17,7 @@ import net.fabricmc.api.ModInitializer;
 
 //always import:
 import com.heckvision.bingosplash.utils.TickAPI;
+import com.heckvision.bingosplash.utils.ShutdownAPI;
 import com.heckvision.bingosplash.core.ExecuteTasks;
 
 
@@ -55,11 +55,11 @@ implements ModInitializer
             //$$ FMLCommonSetupEvent event
             //#endif
     ) {
-        System.out.println("["+ NAME +"] Mod initialized");
-        new ExecuteTasks();
-        TickAPI.registerClientTickListener(() -> {
-            //System.out.println("Tick!");
-        });
+
+        BingoSplashFunctions BSF = new BingoSplashFunctions();
+        BSF.OnInit();
+        TickAPI.registerClientTickListener(BSF::OnTick);
+        ShutdownAPI.registerClientShutdownListener(BSF::OnShutdown);
     }
 
 

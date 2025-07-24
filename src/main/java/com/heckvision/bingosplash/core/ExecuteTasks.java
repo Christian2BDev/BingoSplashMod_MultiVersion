@@ -1,9 +1,11 @@
 package com.heckvision.bingosplash.core;
 
-import com.heckvision.bingosplash.utils.ShutdownAPI;
-import com.heckvision.bingosplash.utils.TickAPI;
+import com.heckvision.bingosplash.utils.*;
 import com.heckvision.bingosplash.web.MessageManager;
 import com.heckvision.bingosplash.web.WebSocketConnection;
+import gg.essential.universal.*;
+import net.minecraft.util.ResourceLocation;
+
 
 public class ExecuteTasks {
 
@@ -23,7 +25,9 @@ public class ExecuteTasks {
     }
 
     private void Execute(String type, String Message) {
-        System.out.println(type + ": " + Message);
+        TitleAPI.ShowTitle(type,Message);
+        ChatAPI.SendMessage(Message);
+
     }
 //    private void Execute(String type,String message) {
 //        Text parsedMessage = Text.literal("§6§l[§r"+type+"§6§l]" +message);

@@ -1,9 +1,0 @@
-Manifest-Version: 1.0
-Main-Class: BingoSplash
-FMLCorePluginContainsFMLMod: true
-ForceLoadAsMod: true
-ModSide: CLIENT
-TweakClass: org.spongepowered.asm.launch.MixinTweaker
-TweakOrder: 0
-MixinConfigs: mixins.bingosplash.json
-

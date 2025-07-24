@@ -66,55 +66,80 @@ dependencies {
         implementation("gg.essential:universalcraft-1.16.2-forge:${project.property("ucVersion")}")
         shadow("gg.essential:universalcraft-1.16.2-forge:${project.property("ucVersion")}")
     }
-    compileOnly("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.22")
+    compileOnly("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.9.0")
     if(project.name.contains("1.16.5-fabric")) {
         modImplementation("gg.essential:universalcraft-1.16.2-fabric:${project.property("ucVersion")}")
         modImplementation("net.fabricmc.fabric-api:fabric-api:0.42.0+1.16")
     }
-    else if (project.name.contains("1.21.5")) {
-        modImplementation("gg.essential:universalcraft-$platform:${project.property("ucVersion")}")
+    if (project.name.contains("1.21.5")) {
+        modImplementation(include("gg.essential:universalcraft-$platform:${project.property("ucVersion")}")!!)
         modImplementation("net.fabricmc.fabric-api:fabric-api:0.128.1+1.21.5")
         modImplementation ("net.fabricmc:fabric-loader:0.16.14")
+        include("gg.essential:vigilance:${project.property("vigilanceVersion")}")!!
+        modImplementation(include("org.java-websocket:Java-WebSocket:1.5.4")!!)
+        modImplementation (include("org.jetbrains.kotlin:kotlin-stdlib:1.9.0")!!)
+        include("org.jetbrains.kotlin:kotlin-stdlib:1.9.0")
+        include("gg.essential:elementa:710")
     }
 }
 
 tasks.jar {
-    dependsOn(tasks.shadowJar)
     if(project.name.contains("1.8.9")) {
-        dependsOn(embed)
-
-        duplicatesStrategy = DuplicatesStrategy.INCLUDE
-        from(embed.files.map { zipTree(it) }) {
-            exclude("META-INF/MUMFREY.*")
-        }
-        manifest.attributes(
-            mapOf(
-                "Main-Class" to "BingoSplash",
-                "FMLCorePluginContainsFMLMod" to "true",
-                "ForceLoadAsMod" to "true",
-                "ModSide" to "CLIENT",
-                "TweakClass" to "org.spongepowered.asm.launch.MixinTweaker",
-                "TweakOrder" to "0",
-                "MixinConfigs" to "mixins.bingosplash.json"
-            )
-        )
+        enabled = false
     }
+
 }
 
 
 tasks.shadowJar{
     archiveClassifier.set("")
-    configurations = listOf(project.configurations.shadow.get())
+    if(project.name.contains("1.8.9")) {
+        configurations = listOf(project.configurations.shadow.get())
 
-    exclude("module-info.class", "META-INF/versions/**")
-    relocate("gg.essential.vigilance", "com.heckvision.vigilance")
-    // vigilance dependencies
-    relocate("gg.essential.elementa", "com.heckvision.elementa")
-    // elementa dependencies
-    relocate("gg.essential.universal", "com.heckvision.universal")
+        exclude("module-info.class", "META-INF/versions/**")
+        relocate("gg.essential.vigilance", "com.heckvision.shadowed.vigilance")
+        // vigilance dependencies
+        relocate("gg.essential.elementa", "com.heckvision.shadowed.elementa")
+        // elementa dependencies
+        relocate("gg.essential.universal", "com.heckvision.shadowed.universal")
+
+        relocate("org.java_websocket", "com.heckvision.shadowed.java_websocket")
+
+        if (project.name.contains("1.8.9")) {
+            dependsOn(embed)
+
+            duplicatesStrategy = DuplicatesStrategy.INCLUDE
+            from(embed.files.map { zipTree(it) }) {
+                exclude("META-INF/MUMFREY.*")
+            }
+            manifest.attributes(
+                mapOf(
+                    "Main-Class" to "BingoSplash",
+                    "FMLCorePluginContainsFMLMod" to "true",
+                    "ForceLoadAsMod" to "true",
+                    "ModSide" to "CLIENT",
+                    "TweakClass" to "org.spongepowered.asm.launch.MixinTweaker",
+                    "TweakOrder" to "0",
+                    "MixinConfigs" to "mixins.bingosplash.json"
+                )
+            )
+        }
+    }
 }
 
-tasks.named("remapJar") {
-    dependsOn(tasks.shadowJar)
+tasks.build{
+    if(project.name.contains("1.8.9")) {
+        dependsOn(tasks.remapJar)
+    }
 }
 
+tasks.remapJar {
+    if(project.name.contains("1.8.9")) {
+        dependsOn(tasks.shadowJar)
+        inputFile.set(tasks.shadowJar.get().archiveFile)
+    }else{
+        if(project.name.contains("1.16.5-forge")){
+            enabled = false
+        }
+    }
+}

@@ -13,11 +13,15 @@ public class MixinClientShutdown {
     @Inject(method = "shutdown", at = @At("HEAD"))
     //#endif
 
-    //#if MC>=11605
+    //#if FORGE && MC==11605
+    //$$ @Inject(method = "shutdown", at = @At("HEAD"))
+    //#endif
+
+    //#if FABRIC && MC>=11605
     //$$ @Inject(method = "stop", at = @At("HEAD"))
     //#endif
 
-    private void onTick(CallbackInfo ci) {
+    private void onCShutdown(CallbackInfo ci) {
         ShutdownAPI.onClientShutdown();
     }
 }

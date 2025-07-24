@@ -25,7 +25,7 @@ public class MessageManager implements MessageListener {
 
     @Override
     public void onMessage(String message) {
-        String parsedMessage = message.substring(message.indexOf("]") + 2, message.length() - 1);
+        String parsedMessage = message.substring(message.indexOf("]") + 2);
         if (message.contains("[Splash]") && BingoConfig.enableSplashPings){
             splashListener.onSplashMessage("§6Splash"," §r"+parsedMessage);
         }
