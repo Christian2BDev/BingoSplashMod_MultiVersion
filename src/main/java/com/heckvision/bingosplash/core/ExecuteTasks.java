@@ -1,32 +1,23 @@
 package com.heckvision.bingosplash.core;
 
 import com.heckvision.bingosplash.utils.*;
-import com.heckvision.bingosplash.web.MessageManager;
-import com.heckvision.bingosplash.web.WebSocketConnection;
-import gg.essential.universal.*;
-import net.minecraft.util.ResourceLocation;
+import gg.essential.universal.UMinecraft;
 
 
 public class ExecuteTasks {
 
-    private final WebSocketConnection connection;
-
     public ExecuteTasks(){
-        connection = new WebSocketConnection();
-        MessageManager messageManager = connection.getMessageManager();
 
         //incoming messages
-        messageManager.setSplashListener(this::Execute);
-        messageManager.setAutomatonListener(this::Execute);
-
-        //websocket connection
-        TickAPI.registerClientTickListener(connection::keepConnection);
-        ShutdownAPI.registerClientShutdownListener(connection::Shutdown);
+        ConnectionAPI.INSTANCE.messageManager.setSplashListener(this::Execute);
+        ConnectionAPI.INSTANCE.messageManager.setAutomatonListener(this::Execute);
     }
 
     private void Execute(String type, String Message) {
-        TitleAPI.ShowTitle(type,Message);
+        TitleAPI.ShowTitle(type,Message,5,5,5);
         ChatAPI.SendMessage(Message);
+        SoundAPI.PlaySound("random.levelup",10,10);
+        //String serverIP = UMinecraft.getMinecraft().getCurrentServerData().serverIP;
 
     }
 //    private void Execute(String type,String message) {

@@ -31,16 +31,16 @@ public class CommandRegister {
         System.out.println("Registering command: " + c.getName() + " Aliases: " + Arrays.toString(c.getAliases()));
 
         //#if MC==10809
-        //MinecraftForge.EVENT_BUS.register(new CommandParserForge(c.getName(),c.getAliases(), c::Run));
         ClientCommandHandler.instance.registerCommand(new CommandParserForge(c.getName(),c.getAliases(), c::Run));
         //#endif
-
         //#if MC==12105
         //$$ ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
-            //$$ var root = ClientCommandManager.literal(c.getName()).executes(ctx -> { c.Run(); return 0;});
-            //$$ for (String alias : c.getAliases()) { dispatcher.register(ClientCommandManager.literal(alias).redirect(root.build()));}
+            //$$ var root = ClientCommandManager.literal(c.getName()).executes(ctx -> { c.Run(); return 0; });
             //$$ dispatcher.register(root);
-        //$$ });
+            //$$ for (String alias : c.getAliases()) {
+                //$$ dispatcher.register(ClientCommandManager.literal(alias).executes(ctx -> { c.Run();return 0; }));
+                //$$ }
+            //$$ });
         //#endif
     }
 }
