@@ -29,7 +29,7 @@ public class MessageManager implements MessageListener {
         if (message.contains("[Splash]") && BingoConfig.enableSplashPings){
             splashListener.onSplashMessage("§6Splash"," §r"+parsedMessage);
         }
-        if (message.contains("[Automaton]") && BingoConfig.enableAutomatonPartsPings) {
+        if (message.contains("[Automaton]") && BingoConfig.enableAutomatonPings) {
             automatonListener.onAutomatonMessage("§2Automaton",parsedMessage);
         }
     }

@@ -16,7 +16,7 @@ public class ExecuteTasks {
     private void Execute(String type, String Message) {
         TitleAPI.ShowTitle(type,Message,5,5,5);
         ChatAPI.SendMessage(Message);
-        SoundAPI.PlaySound("random.levelup",10,10);
+        SoundAPI.PlaySound("random.levelup",1,1);
         //String serverIP = UMinecraft.getMinecraft().getCurrentServerData().serverIP;
 
     }

@@ -1,5 +1,6 @@
 package com.heckvision.bingosplash.utils;
 
+import com.heckvision.bingosplash.gui.BingoConfig;
 import gg.essential.universal.UMinecraft;
 import java.util.HashMap;
 
@@ -26,11 +27,11 @@ public class SoundAPI {
 
     public static void PlaySound(String soundName, float volume, float pitch) {
         //#if MC==10809
-        UMinecraft.getMinecraft().thePlayer.playSound(soundName, volume, pitch);
+        UMinecraft.getMinecraft().thePlayer.playSound(soundName, BingoConfig.pingsSoundVolume *volume, pitch);
         //#endif
 
         //#if MC==12105
-        //$$ UMinecraft.getMinecraft().player.playSound(getSoundFromString(soundMap.get(soundName)),volume,pitch);
+        //$$ UMinecraft.getMinecraft().player.playSound(getSoundFromString(soundMap.get(soundName)),BingoConfig.pingsSoundVolume * volume,pitch);
         //#endif
 
     }

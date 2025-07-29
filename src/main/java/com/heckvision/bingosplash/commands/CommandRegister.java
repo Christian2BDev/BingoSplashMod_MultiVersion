@@ -21,6 +21,7 @@ public class CommandRegister {
     private final Map<String, Command> commands = new HashMap<>();
     public CommandRegister() {
        commands.put("Bingo",new BingoSplashCommand());
+       commands.put("TestData",new TestDataCommand());
 
        for (Command c : commands.values()) {
            RegisterCommand(c);

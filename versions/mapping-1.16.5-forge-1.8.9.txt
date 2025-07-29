@@ -85,7 +85,7 @@ net.minecraft.client.multiplayer.PlayerInfo getSkinLocation() getLocationSkin()
 net.minecraft.client.multiplayer.PlayerInfo getTeam() getPlayerTeam()
 
 net.minecraft.client.player.AbstractClientPlayer net.minecraft.client.entity.AbstractClientPlayer
-net.minecraft.client.player.LocalPlayer net.minecraft.client.entity.EntityPlayerSP
+net.minecraft.client.entity.player.ClientPlayerEntity net.minecraft.client.entity.EntityPlayerSP
 net.minecraft.client.player.RemotePlayer net.minecraft.client.entity.EntityOtherPlayerMP
 
 net.minecraft.client.player.LocalPlayer chat() sendChatMessage()
@@ -890,9 +890,6 @@ net.minecraft.world.phys.Vec3 x xCoord
 net.minecraft.world.phys.Vec3 y yCoord
 net.minecraft.world.phys.Vec3 z zCoord
 
-net.minecraft.world.scores.PlayerTeam net.minecraft.scoreboard.ScorePlayerTeam
-net.minecraft.world.scores.Team net.minecraft.scoreboard.Team
-net.minecraft.world.scores.Team$Visibility net.minecraft.scoreboard.Team$EnumVisible
 
 net.minecraft.world.scores.PlayerTeam getName() getRegisteredName()
 
@@ -912,6 +909,8 @@ net.minecraftforge.eventbus.api.SubscribeEvent net.minecraftforge.fml.common.eve
 net.minecraftforge.fml.ModContainer net.minecraftforge.fml.common.ModContainer
 
 org.lwjgl.glfw.GLFW org.lwjgl.input.Keyboard
+
+net.minecraft.world.server.ServerWorld net.minecraft.world.WorldServer
 
 org.lwjgl.glfw.GLFW GLFW_KEY_0 KEY_0
 org.lwjgl.glfw.GLFW GLFW_KEY_1 KEY_1
