@@ -1,8 +1,8 @@
 package com.heckvision.bingosplash;
 
 import com.heckvision.bingosplash.commands.CommandRegister;
-import com.heckvision.bingosplash.core.ExecuteTasks;
-import com.heckvision.bingosplash.core.ModStateHandler;
+import com.heckvision.bingosplash.core.ProcessMessages;
+import com.heckvision.bingosplash.events.OnWorldChangeEvent;
 
 import static com.heckvision.bingosplash.BingoSplash.NAME;
 
@@ -14,9 +14,8 @@ public class BingoSplashFunctions {
      */
     public void OnInit(){
         System.out.println("["+ NAME +"] Mod initialized");
-        new ExecuteTasks();
+        new ProcessMessages();
         new CommandRegister();
-        BingoSplash.stateHandler = new ModStateHandler();
     }
 
     /**
@@ -25,6 +24,7 @@ public class BingoSplashFunctions {
      */
     public void OnTick(){
         //Tick code here
+        OnWorldChangeEvent.WorldChangeCheck();
     }
 
     /**
@@ -36,11 +36,10 @@ public class BingoSplashFunctions {
     }
 
     /**
-     * Runs once the minecraft world is loaded
+     * Runs once the minecraft world changed
+     * Register custom void using: WorldChangeAPI.registerWorldChangeListener
      */
-    public void OnWorldLoaded(){
+    public void OnWorldChanged(){
         //World loaded code here
-        System.out.println("test");
-        BingoSplash.stateHandler.check();
     }
 }

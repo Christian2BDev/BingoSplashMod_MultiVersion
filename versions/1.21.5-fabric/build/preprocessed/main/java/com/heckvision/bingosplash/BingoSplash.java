@@ -1,15 +1,10 @@
 package com.heckvision.bingosplash;
 
 //always import:
-import com.heckvision.bingosplash.events.WorldLoadEvent;
 import com.heckvision.bingosplash.utils.TickAPI;
 import com.heckvision.bingosplash.utils.ShutdownAPI;
-import com.heckvision.bingosplash.utils.WorldLoadAPI;
-import com.heckvision.bingosplash.core.ModStateHandler;
+import com.heckvision.bingosplash.utils.WorldChangeAPI;
 
-//#if FORGE
-//$$ import net.minecraftforge.common.MinecraftForge;
-//#endif
 
 //#if MC==10809
 //$$
@@ -44,7 +39,6 @@ implements ModInitializer
     public static final String VERSION = "1.0";
     public static final String NAME = "BingoSplash";
     public static final String MODID = "bingosplash";
-    public static ModStateHandler stateHandler;
     //#if MC==10809
     //$$ @Mod.Instance(BingoSplash.MODID)
     //$$ public static BingoSplash instance;
@@ -70,15 +64,7 @@ implements ModInitializer
         BSF.OnInit();
         TickAPI.registerClientTickListener(BSF::OnTick);
         ShutdownAPI.registerClientShutdownListener(BSF::OnShutdown);
-        WorldLoadAPI.registerWorldLoadListener(BSF::OnWorldLoaded);
-
-        //#if FORGE
-        //$$ MinecraftForge.EVENT_BUS.register(new WorldLoadEvent());
-        //#endif
-
-        //#if FABRIC
-        new WorldLoad();
-        //#endif
+        WorldChangeAPI.registerWorldChangeListener(BSF::OnWorldChanged);
     }
 
 

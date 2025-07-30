@@ -653,7 +653,7 @@ net.minecraft.world.item.Items WOODEN_SWORD wooden_sword
 net.minecraft.world.item.Items WRITABLE_BOOK writable_book
 net.minecraft.world.item.Items WRITTEN_BOOK written_book
 
-net.minecraft.world.level.Level net.minecraft.world.World
+
 
 net.minecraft.world.level.Level getBlockEntity() getTileEntity()
 net.minecraft.world.level.Level getDayTime() getWorldTime()

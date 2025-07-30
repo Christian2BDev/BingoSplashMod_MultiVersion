@@ -1,6 +1,6 @@
 package com.heckvision.bingosplash.web;
 
-import com.heckvision.bingosplash.gui.BingoConfig;
+import com.heckvision.bingosplash.core.ModStateHandler;
 
 public class WebSocketConnection {
 
@@ -15,7 +15,7 @@ public class WebSocketConnection {
     }
 
     public void keepConnection(){
-        boolean enabled = BingoConfig.enableBingoSplash; // Replace with your logic
+        boolean enabled = ModStateHandler.ModEnabled(); // Replace with your logic
         if (enabled != prevEnabled) {
             socketManager.setShouldConnect(enabled);
             prevEnabled = enabled;

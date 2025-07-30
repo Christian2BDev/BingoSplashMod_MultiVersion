@@ -68,7 +68,7 @@ public class BingoConfig extends Vigilant {
             description = "Play a sound when a splash is announced",
             category = "Splashes", subcategory = "Splash"
     )
-    public static boolean enableSplashPingsSound = true;
+    public static boolean enableSplashPingsSounds = true;
     //endregion
 
     //region Automaton
@@ -117,14 +117,14 @@ public class BingoConfig extends Vigilant {
     public static boolean enableJungleChat = true;
 
     @Property(
-            type = PropertyType.SWITCH, name = "Robot Automaton pings",
+            type = PropertyType.SWITCH, name = "Title",
             description = "Display a title when a Jungle key is pinged",
             category = "Mining", subcategory = "Jungle"
     )
     public static boolean enableJungleTitle = true;
 
     @Property(
-            type = PropertyType.SWITCH, name = "Robot Automaton pings",
+            type = PropertyType.SWITCH, name = "Sound",
             description = "Play a sound when a Jungle key is pinged",
             category = "Mining", subcategory = "Jungle"
     )
@@ -144,7 +144,7 @@ public class BingoConfig extends Vigilant {
 
         Arrays.asList(
                 "enableSplashPingsChat", "enableSplashPingsTitle",
-                "enableSplashPingsSound"
+                "enableSplashPingsSounds"
         ).forEach(property -> addDependency(property, "enableSplashPings"));
 
         Arrays.asList(
