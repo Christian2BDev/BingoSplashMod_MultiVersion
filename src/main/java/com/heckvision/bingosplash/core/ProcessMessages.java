@@ -31,7 +31,7 @@ public class ProcessMessages {
                 "3", "f","random.levelup",5,5,5,1,1
         ));
 
-        TypeConfigs.put("Jungle", new TypeConfig(
+        TypeConfigs.put("Jungle Key", new TypeConfig(
                 () -> BingoConfig.enableJunglePings,
                 () -> BingoConfig.enableJungleChat,
                 () -> BingoConfig.enableJungleTitle,

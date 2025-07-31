@@ -12,10 +12,10 @@ import java.util.concurrent.TimeUnit;
 
 public class WebSocketManager {
     private final URI serverUri;
-    private WebSocketClient client;
+    private volatile WebSocketClient client; // Made volatile for thread safety
     private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-    private boolean shouldConnect = false;
-    private boolean connecting = false;
+    private volatile boolean shouldConnect = false; // Made volatile for thread safety
+    private volatile boolean connecting = false; // Made volatile for thread safety
 
     private MessageListener messageListener;
 
@@ -26,7 +26,6 @@ public class WebSocketManager {
     public WebSocketManager(String serverUrl) {
         this.serverUri = URI.create(serverUrl);
     }
-
 
     public void setShouldConnect(boolean shouldConnect) {
         this.shouldConnect = shouldConnect;
@@ -51,6 +50,7 @@ public class WebSocketManager {
                     @Override
                     public void onOpen(ServerHandshake handshakedata) {
                         System.out.println("WebSocket connected.");
+                        connecting = false; // Connection successful, clear connecting flag
                     }
 
                     @Override
@@ -88,11 +88,15 @@ public class WebSocketManager {
 
                 client = socket;
                 socket.connect(); // Non-blocking
+
             } catch (Exception e) {
                 System.err.println("WebSocket connect exception:");
                 e.printStackTrace();
                 connecting = false;
-                scheduleReconnect();
+                // FIX: Only reconnect if we should still be connecting
+                if (shouldConnect) {
+                    scheduleReconnect();
+                }
             }
         });
     }

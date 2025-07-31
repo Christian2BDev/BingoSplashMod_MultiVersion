@@ -15,8 +15,9 @@ import net.minecraft.util.ChatComponentText;
 public class TitleAPI {
     public static void ShowTitle(String title, String SubTitle, int fadeIn, int stay, int fadeOut)  {
         //#if MC==10809
+        UMinecraft.getMinecraft().ingameGUI.setDefaultTitlesTimes();
         UMinecraft.getMinecraft().ingameGUI.displayTitle(null, SubTitle, fadeIn * 20, stay * 20, fadeOut * 20);
-        UMinecraft.getMinecraft().ingameGUI.displayTitle(title, null, -1, -1, -1);
+        UMinecraft.getMinecraft().ingameGUI.displayTitle(title, null, fadeIn * 20, stay * 20, fadeOut * 20);
         //#endif
 
         //#if MC==12105
