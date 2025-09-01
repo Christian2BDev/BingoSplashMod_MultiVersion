@@ -8,6 +8,7 @@ import com.heckvision.bingosplash.utils.WorldChangeAPI;
 
 //#if MC==10809
 
+import com.heckvision.bingosplash.web.MessageManager;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 //#endif

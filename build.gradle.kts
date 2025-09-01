@@ -51,11 +51,11 @@ configurations.implementation.get().extendsFrom(embed)
 
 dependencies {
     implementation("gg.essential:vigilance:${project.property("vigilanceVersion")}")
-    implementation("org.java-websocket:Java-WebSocket:1.5.4")
+    modImplementation("org.java-websocket:Java-WebSocket:1.6.0")
 
     if (project.name.contains("1.8.9-forge")){
         embed("org.spongepowered:mixin:0.7-SNAPSHOT")
-        shadow("org.java-websocket:Java-WebSocket:1.5.4")
+        shadow("org.java-websocket:Java-WebSocket:1.6.0")
         modImplementation("gg.essential:universalcraft-$platform:${project.property("ucVersion")}")
         shadow("gg.essential:vigilance:${project.property("vigilanceVersion")}")
         shadow("gg.essential:universalcraft-$platform:${project.property("ucVersion")}")
@@ -76,7 +76,7 @@ dependencies {
         modImplementation("net.fabricmc.fabric-api:fabric-api:0.128.1+1.21.5")
         modImplementation ("net.fabricmc:fabric-loader:0.16.14")
         include("gg.essential:vigilance:${project.property("vigilanceVersion")}")!!
-        modImplementation(include("org.java-websocket:Java-WebSocket:1.5.4")!!)
+        modImplementation(include("org.java-websocket:Java-WebSocket:1.6.0")!!)
         modImplementation (include("org.jetbrains.kotlin:kotlin-stdlib:1.9.0")!!)
         include("org.jetbrains.kotlin:kotlin-stdlib:1.9.0")
         include("gg.essential:elementa:710")

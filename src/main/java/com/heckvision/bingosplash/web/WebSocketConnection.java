@@ -1,37 +1,32 @@
 package com.heckvision.bingosplash.web;
 
-import com.heckvision.bingosplash.core.ModStateHandler;
+import org.java_websocket.client.WebSocketClient;
+import org.java_websocket.enums.ReadyState;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class WebSocketConnection {
 
-    private final WebSocketManager socketManager;
-    private boolean prevEnabled = false;
-    private final MessageManager messageManager;
+    private final String serverUrl = "wss://testserver.heckvision.com";
+    private final WebSocketManager manager;
 
     public WebSocketConnection() {
-        socketManager = new WebSocketManager("wss://heckvision.com:25571");
-        messageManager = new MessageManager();
-        socketManager.setMessageListener(messageManager);
+        this.manager = new WebSocketManager(serverUrl);
     }
 
-    public void keepConnection(){
-        boolean enabled = ModStateHandler.ModEnabled(); // Replace with your logic
-        if (enabled != prevEnabled) {
-            socketManager.setShouldConnect(enabled);
-            prevEnabled = enabled;
-        }
+    public void connect() {
+        System.out.println("Connecting to WebSocket: " + serverUrl);
+
+        manager.connect();
     }
 
-    public void Shutdown(){
-        socketManager.shutdown();
-        System.out.println("BingoSplash is stopping!");
+    public void shutdown() {
+        manager.close();
     }
 
-    public MessageManager getMessageManager(){
-        return messageManager;
+    public void keepConnection() {
+
     }
-
-
-
 
 }

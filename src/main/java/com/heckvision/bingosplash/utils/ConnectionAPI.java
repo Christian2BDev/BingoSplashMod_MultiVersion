@@ -5,14 +5,14 @@ import com.heckvision.bingosplash.web.WebSocketConnection;
 
 public class ConnectionAPI {
     private final WebSocketConnection connection;
-    public final MessageManager messageManager;
-
-    private ConnectionAPI(){
+    public MessageManager messageManager;
+    private ConnectionAPI() {
         connection = new WebSocketConnection();
-        messageManager = connection.getMessageManager();
-
+        messageManager = new MessageManager();
+        connection.connect();
         TickAPI.registerClientTickListener(connection::keepConnection);
-        ShutdownAPI.registerClientShutdownListener(connection::Shutdown);
+
+        ShutdownAPI.registerClientShutdownListener(connection::shutdown);
     }
 
     public static ConnectionAPI INSTANCE = new ConnectionAPI();

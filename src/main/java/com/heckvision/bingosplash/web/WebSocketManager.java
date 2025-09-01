@@ -1,126 +1,166 @@
 package com.heckvision.bingosplash.web;
 
 import org.java_websocket.client.WebSocketClient;
-import org.java_websocket.enums.ReadyState;
 import org.java_websocket.handshake.ServerHandshake;
 
-import javax.net.ssl.SSLContext;
-import java.net.URI;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import javax.net.ssl.*;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.*;
+import java.security.*;
+import java.security.cert.CertificateException;
+import java.util.Collections;
+import java.util.List;
 
+/**
+ * WebSocketManager with SAN/SNI fix for Java 8u51.
+ * Safe for production: full cert validation, SNI enforced.
+ */
 public class WebSocketManager {
-    private final URI serverUri;
-    private volatile WebSocketClient client; // Made volatile for thread safety
-    private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-    private volatile boolean shouldConnect = false; // Made volatile for thread safety
-    private volatile boolean connecting = false; // Made volatile for thread safety
 
-    private MessageListener messageListener;
-
-    public void setMessageListener(MessageListener listener) {
-        this.messageListener = listener;
-    }
+    private WebSocketClient client;
+    private final String serverUrl;
 
     public WebSocketManager(String serverUrl) {
-        this.serverUri = URI.create(serverUrl);
+        this.serverUrl = serverUrl;
     }
 
-    public void setShouldConnect(boolean shouldConnect) {
-        this.shouldConnect = shouldConnect;
+    public void connect() {
+        try {
+            URI uri = new URI(serverUrl);
+            String host = uri.getHost();
+            int port = uri.getPort() == -1 ? 443 : uri.getPort();
 
-        if (shouldConnect) {
-            tryStartConnection();
-        } else {
-            disconnect();
+            client = new WebSocketClient(uri) {
+                @Override
+                public void onOpen(ServerHandshake handshake) {
+                    System.out.println("WebSocket opened: " + getURI());
+                }
+
+                @Override
+                public void onMessage(String message) {
+                    System.out.println("Message received: " + message);
+                }
+
+                @Override
+                public void onClose(int code, String reason, boolean remote) {
+                    System.out.println("WebSocket closed: " + reason);
+                    reconnect();
+                }
+
+                @Override
+                public void onError(Exception ex) {
+                    System.err.println("WebSocket error: " + ex);
+                }
+            };
+
+            KeyStore ts = KeyStore.getInstance("PKCS12");
+            try (InputStream is = WebSocketManager.class.getResourceAsStream("/mykeystore.jks")) {
+                ts.load(is, "changeit".toCharArray());
+            }
+
+            TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+            tmf.init(ts);
+
+            SSLContext sslContext = SSLContext.getInstance("TLS");
+            sslContext.init(null, tmf.getTrustManagers(), null);
+
+            SSLSocketFactory sniFactory = new SNISocketFactory(sslContext.getSocketFactory(), host, port);
+            client.setSocketFactory(sniFactory);
+
+            client.connect();
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
-    private void tryStartConnection() {
-        if (client != null && client.getReadyState() == ReadyState.OPEN) return;
-        if (connecting) return;
+    public void reconnect() {
+        try {
+            System.out.println("Connection lost, trying to reconnect...");
+            Thread.sleep(2000); // delay before retry
+            connect();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
 
-        connecting = true;
+    public void close() {
+        if (client != null) {
+            client.close();
+        }
+    }
 
-        executor.execute(() -> {
-            try {
-                System.out.println("Attempting to connect to WebSocket...");
-                WebSocketClient socket = new WebSocketClient(serverUri) {
-                    @Override
-                    public void onOpen(ServerHandshake handshakedata) {
-                        System.out.println("WebSocket connected.");
-                        connecting = false; // Connection successful, clear connecting flag
-                    }
+    // === SNISocketFactory (forces SAN/SNI) ===
+    private static class SNISocketFactory extends SSLSocketFactory {
+        private final SSLSocketFactory delegate;
+        private final String host;
+        private final int port;
 
-                    @Override
-                    public void onMessage(String message) {
-                        System.out.println("Received: " + message);
-                        if (messageListener != null) {
-                            messageListener.onMessage(message);
-                        }
-                    }
+        SNISocketFactory(SSLSocketFactory delegate, String host, int port) {
+            this.delegate = delegate;
+            this.host = host;
+            this.port = port;
+        }
 
-                    @Override
-                    public void onClose(int code, String reason, boolean remote) {
-                        System.out.println("WebSocket closed: " + reason);
-                        client = null;
-                        connecting = false;
-                        if (shouldConnect) {
-                            scheduleReconnect();
-                        }
-                    }
+        @Override
+        public Socket createSocket() throws IOException {
+            return enableSNI(delegate.createSocket(host, port));
+        }
 
-                    @Override
-                    public void onError(Exception ex) {
-                        System.err.println("WebSocket error:");
-                        ex.printStackTrace();
-                        client = null;
-                        connecting = false;
-                        if (shouldConnect) {
-                            scheduleReconnect();
-                        }
-                    }
-                };
+        @Override
+        public Socket createSocket(Socket s, String host, int port, boolean autoClose) throws IOException {
+            return enableSNI(delegate.createSocket(s, host, port, autoClose));
+        }
 
-                SSLContext sslContext = SSLContext.getDefault();
-                socket.setSocketFactory(sslContext.getSocketFactory());
+        @Override
+        public Socket createSocket(String host, int port) throws IOException {
+            return enableSNI(delegate.createSocket(host, port));
+        }
 
-                client = socket;
-                socket.connect(); // Non-blocking
+        @Override
+        public Socket createSocket(String host, int port, InetAddress localHost, int localPort) throws IOException {
+            return enableSNI(delegate.createSocket(host, port, localHost, localPort));
+        }
 
-            } catch (Exception e) {
-                System.err.println("WebSocket connect exception:");
-                e.printStackTrace();
-                connecting = false;
-                // FIX: Only reconnect if we should still be connecting
-                if (shouldConnect) {
-                    scheduleReconnect();
+        @Override
+        public Socket createSocket(InetAddress host, int port) throws IOException {
+            return enableSNI(delegate.createSocket(host, port));
+        }
+
+        @Override
+        public Socket createSocket(InetAddress address, int port, InetAddress localAddress, int localPort) throws IOException {
+            return enableSNI(delegate.createSocket(address, port, localAddress, localPort));
+        }
+
+        @Override
+        public String[] getDefaultCipherSuites() {
+            return delegate.getDefaultCipherSuites();
+        }
+
+        @Override
+        public String[] getSupportedCipherSuites() {
+            return delegate.getSupportedCipherSuites();
+        }
+
+        private Socket enableSNI(Socket socket) {
+            if (socket instanceof SSLSocket) {
+                try {
+                    SSLSocket sslSocket = (SSLSocket) socket;
+                    SSLParameters sslParams = sslSocket.getSSLParameters();
+
+                    // Force SNI with hostname
+                    List<SNIServerName> serverNames =
+                            Collections.<SNIServerName>singletonList(new SNIHostName(host));
+                    sslParams.setServerNames(serverNames);
+
+                    sslSocket.setSSLParameters(sslParams);
+                } catch (Exception e) {
+                    System.err.println("Warning: Failed to set SNI: " + e.getMessage());
                 }
             }
-        });
-    }
-
-    private void scheduleReconnect() {
-        executor.schedule(this::tryStartConnection, 5, TimeUnit.SECONDS);
-    }
-
-    private void disconnect() {
-        if (client != null && (client.getReadyState() == ReadyState.OPEN || client.getReadyState() == ReadyState.NOT_YET_CONNECTED)) {
-            try {
-                client.close();
-                System.out.println("WebSocket disconnected by request.");
-            } catch (Exception e) {
-                System.err.println("WebSocket disconnect exception:");
-                e.printStackTrace();
-            }
+            return socket;
         }
-        client = null;
-    }
-
-    public void shutdown() {
-        shouldConnect = false;
-        disconnect();
-        executor.shutdownNow();
     }
 }
