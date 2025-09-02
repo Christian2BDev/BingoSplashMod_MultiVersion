@@ -7,11 +7,10 @@ public class ConnectionAPI {
     private final WebSocketConnection connection;
     public MessageManager messageManager;
     private ConnectionAPI() {
-        connection = new WebSocketConnection();
-        messageManager = new MessageManager();
-        connection.connect();
-        TickAPI.registerClientTickListener(connection::keepConnection);
 
+        messageManager = new MessageManager();
+        connection = new WebSocketConnection(messageManager);
+        TickAPI.registerClientTickListener(connection::keepConnection);
         ShutdownAPI.registerClientShutdownListener(connection::shutdown);
     }
 

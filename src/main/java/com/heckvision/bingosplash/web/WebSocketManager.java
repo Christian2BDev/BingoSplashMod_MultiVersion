@@ -4,14 +4,17 @@ import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
 import javax.net.ssl.*;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.*;
 import java.security.*;
-import java.security.cert.CertificateException;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * WebSocketManager with SAN/SNI fix for Java 8u51.
@@ -21,13 +24,28 @@ public class WebSocketManager {
 
     private WebSocketClient client;
     private final String serverUrl;
+    private final ReentrantLock clientLock = new ReentrantLock();
+    private final AtomicBoolean shouldReconnect = new AtomicBoolean(false);
+    private final ScheduledExecutorService reconnectionExecutor = Executors.newSingleThreadScheduledExecutor();
+    private volatile boolean isShutdown = false;
+    private MessageListener messageListener;
 
-    public WebSocketManager(String serverUrl) {
+    public WebSocketManager(String serverUrl, MessageListener messageListener) {
         this.serverUrl = serverUrl;
+        this.messageListener = messageListener;
     }
 
     public void connect() {
+        if (isShutdown) {
+            return;
+        }
+
+        clientLock.lock();
         try {
+            if (isShutdown) {
+                return;
+            }
+
             URI uri = new URI(serverUrl);
             String host = uri.getHost();
             int port = uri.getPort() == -1 ? 443 : uri.getPort();
@@ -41,17 +59,23 @@ public class WebSocketManager {
                 @Override
                 public void onMessage(String message) {
                     System.out.println("Message received: " + message);
+                    messageListener.onMessage(message);
                 }
 
                 @Override
                 public void onClose(int code, String reason, boolean remote) {
                     System.out.println("WebSocket closed: " + reason);
-                    reconnect();
+                    if (shouldReconnect.get() && !isShutdown) {
+                        scheduleReconnection();
+                    }
                 }
 
                 @Override
                 public void onError(Exception ex) {
                     System.err.println("WebSocket error: " + ex);
+                    if (shouldReconnect.get() && !isShutdown) {
+                        scheduleReconnection();
+                    }
                 }
             };
 
@@ -73,22 +97,67 @@ public class WebSocketManager {
 
         } catch (Exception e) {
             e.printStackTrace();
+            if (shouldReconnect.get() && !isShutdown) {
+                scheduleReconnection();
+            }
+        } finally {
+            clientLock.unlock();
         }
     }
 
+    private void scheduleReconnection() {
+        if (isShutdown || !shouldReconnect.get()) {
+            return;
+        }
+
+        reconnectionExecutor.schedule(() -> {
+            if (!isShutdown && shouldReconnect.get()) {
+                connect();
+            }
+        }, 2000, TimeUnit.MILLISECONDS);
+    }
+
     public void reconnect() {
+        if (isShutdown) {
+            return;
+        }
+
+        clientLock.lock();
         try {
-            System.out.println("Connection lost, trying to reconnect...");
-            Thread.sleep(2000); // delay before retry
+            if (client != null) {
+                client.close();
+            }
             connect();
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
+        } finally {
+            clientLock.unlock();
         }
     }
 
     public void close() {
-        if (client != null) {
-            client.close();
+        clientLock.lock();
+        try {
+            shouldReconnect.set(false);
+            if (client != null) {
+                client.close();
+                client = null;
+            }
+        } finally {
+            clientLock.unlock();
+        }
+    }
+
+    public void shutdown() {
+        clientLock.lock();
+        try {
+            isShutdown = true;
+            shouldReconnect.set(false);
+            if (client != null) {
+                client.close();
+                client = null;
+            }
+            reconnectionExecutor.shutdown();
+        } finally {
+            clientLock.unlock();
         }
     }
 

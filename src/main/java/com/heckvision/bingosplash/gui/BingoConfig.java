@@ -1,5 +1,6 @@
 package com.heckvision.bingosplash.gui;
 
+import com.heckvision.bingosplash.updating.UpdateManager;
 import gg.essential.vigilance.Vigilant;
 import gg.essential.vigilance.data.Property;
 import gg.essential.vigilance.data.PropertyType;
@@ -39,6 +40,14 @@ public class BingoConfig extends Vigilant {
             category = "General", subcategory = "Settings", maxF = 1.0f
     )
     public static float pingsSoundVolume = 1.0f;
+
+    @Property(type = PropertyType.BUTTON,
+            name = "Check for updates",
+            description = "Check if there's a new version of the mod available", category = "General",
+            subcategory = "Main", placeholder = "Check")
+    public static void checkForUpdate(){
+        UpdateManager.getInstance().checkForUpdate();
+    }
     //endregion
 
     //region Splash

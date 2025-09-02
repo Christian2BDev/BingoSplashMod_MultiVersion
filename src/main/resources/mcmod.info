@@ -2,17 +2,16 @@
   {
     "modid": "bingosplash",
     "name": "BingoSplash",
-    "description": "A Forge mod ",
+    "description": "The Bingo Splash Community mod!",
     "version": "${version}",
-    "mcversion": "${mcVersionStr}",
-    "url": "",
-    "updateUrl": "",
+    "mcversion": "1.8.9-1.21.5",
+    "url": "https://github.com/IQONIQ11/BingoSplashCommunity-Mod",
+    "updateUrl": "https://github.com/IQONIQ11/BingoSplashCommunity-Mod",
     "authorList": [
-      "Christian2B"
+      "Christian2B",
+      "IQONIQ_"
     ],
     "credits": "",
-    "logoFile": "",
-    "screenshots": [],
-    "dependencies": []
+    "logoFile": "images/BingoSplashComLogo.jpg"
   }
 ]
