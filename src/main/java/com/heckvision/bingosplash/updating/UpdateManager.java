@@ -119,6 +119,7 @@ public class UpdateManager {
 
     @SuppressWarnings("deprecation")
     public void downloadUpdate() {
+        MainTreadAPI.runOnMainThread(() -> {UScreen.displayScreen(null);});
         String fileUrl = downloadUrl;
         File targetFile = new File("mods", fileName);
         try {

@@ -1,5 +1,6 @@
 package com.heckvision.bingosplash.updating;
 
+import com.heckvision.bingosplash.utils.MainTreadAPI;
 import gg.essential.elementa.ElementaVersion;
 import gg.essential.elementa.UIComponent;
 import gg.essential.elementa.UIConstraints;
@@ -82,7 +83,6 @@ public class UpdatePopUp extends WindowScreen {
 
         //action
         button.onMouseClick((c,e) -> {
-            closeGUI();
             r.run();
             return Unit.INSTANCE;
 
@@ -92,7 +92,8 @@ public class UpdatePopUp extends WindowScreen {
     }
 
     public void closeGUI(){
-        UScreen.displayScreen(null);
+        MainTreadAPI.runOnMainThread(() -> UScreen.displayScreen(null));
+
     }
 
 
