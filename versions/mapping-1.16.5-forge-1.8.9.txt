@@ -29,7 +29,7 @@ net.minecraft.client.KeyMapping releaseAll() unPressAllKeys()
 net.minecraft.client.Minecraft isSameThread() isCallingFromMinecraftThread()
 net.minecraft.client.Minecraft isWindowActive inGameHasFocus
 net.minecraft.client.Minecraft setScreen() displayGuiScreen()
-net.minecraft.client.Minecraft submit() addScheduledTask()
+net.minecraft.client.Minecraft execute() addScheduledTask()
 
 net.minecraft.client.Options getSoundSourceVolume() getSoundLevel()
 net.minecraft.client.Options keyAttack keyBindAttack
@@ -905,6 +905,10 @@ net.minecraftforge.eventbus.api.Cancelable net.minecraftforge.fml.common.eventha
 net.minecraftforge.eventbus.api.Event net.minecraftforge.fml.common.eventhandler.Event
 net.minecraftforge.eventbus.api.EventPriority net.minecraftforge.fml.common.eventhandler.EventPriority
 net.minecraftforge.eventbus.api.SubscribeEvent net.minecraftforge.fml.common.eventhandler.SubscribeEvent
+
+net.minecraftforge.event.entity.player.PlayerEvent net.minecraftforge.fml.common.gameevent.PlayerEvent
+
+net.minecraftforge.client.event.ClientPlayerNetworkEvent.LoggedInEvent net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent
 
 net.minecraftforge.fml.ModContainer net.minecraftforge.fml.common.ModContainer
 

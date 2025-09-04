@@ -1,6 +1,7 @@
 package com.heckvision.bingosplash;
 
 //always import:
+import com.heckvision.bingosplash.utils.ServerJoinApi;
 import com.heckvision.bingosplash.utils.TickAPI;
 import com.heckvision.bingosplash.utils.ShutdownAPI;
 import com.heckvision.bingosplash.utils.WorldChangeAPI;
@@ -37,7 +38,7 @@ public class BingoSplash
 //$$ implements ModInitializer
 //#endif
 {
-    public static final String VERSION = "1.0";
+    public static final String VERSION = "v0.0.1-beta";
     public static final String NAME = "BingoSplash";
     public static final String MODID = "bingosplash";
     //#if MC==10809
@@ -66,6 +67,7 @@ public class BingoSplash
         TickAPI.registerClientTickListener(BSF::OnTick);
         ShutdownAPI.registerClientShutdownListener(BSF::OnShutdown);
         WorldChangeAPI.registerWorldChangeListener(BSF::OnWorldChanged);
+        ServerJoinApi.registerServerJoinListener(BSF::OnServerJoined);
     }
 
 

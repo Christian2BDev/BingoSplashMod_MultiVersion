@@ -2,7 +2,9 @@ package com.heckvision.bingosplash;
 
 import com.heckvision.bingosplash.commands.CommandRegister;
 import com.heckvision.bingosplash.core.ProcessMessages;
+import com.heckvision.bingosplash.events.OnServerJoinEvent;
 import com.heckvision.bingosplash.events.OnWorldChangeEvent;
+import com.heckvision.bingosplash.updating.UpdateManager;
 
 import static com.heckvision.bingosplash.BingoSplash.NAME;
 
@@ -16,6 +18,7 @@ public class BingoSplashFunctions {
         System.out.println("["+ NAME +"] Mod initialized");
         new ProcessMessages();
         new CommandRegister();
+        new OnServerJoinEvent();
     }
 
     /**
@@ -41,5 +44,14 @@ public class BingoSplashFunctions {
      */
     public void OnWorldChanged(){
         //World loaded code here
+    }
+
+    /**
+     * Runs once the minecraft joined a server
+     * Register custom void using: ServerJoinApi.registerServerJoinListener
+     */
+    public void OnServerJoined(){
+        //Server joined code here
+        UpdateManager.getInstance().checkForUpdate(true);
     }
 }

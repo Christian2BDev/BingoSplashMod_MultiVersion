@@ -1,5 +1,6 @@
 package com.heckvision.bingosplash.gui;
 
+import com.heckvision.bingosplash.BingoSplash;
 import com.heckvision.bingosplash.updating.UpdateManager;
 import gg.essential.vigilance.Vigilant;
 import gg.essential.vigilance.data.Property;
@@ -46,7 +47,7 @@ public class BingoConfig extends Vigilant {
             description = "Check if there's a new version of the mod available", category = "General",
             subcategory = "Main", placeholder = "Check")
     public static void checkForUpdate(){
-        UpdateManager.getInstance().checkForUpdate();
+        UpdateManager.getInstance().checkForUpdate(false);
     }
     //endregion
 
@@ -146,7 +147,7 @@ public class BingoConfig extends Vigilant {
 
 
 
-    public static BingoConfig INSTANCE = new BingoConfig("1.0");
+    public static BingoConfig INSTANCE = new BingoConfig(BingoSplash.VERSION);
     public BingoConfig(String VERSION) {
         super(new File("./config/BingoSplash.toml"), "BingoSplash (" + VERSION + ")"  );
         initialize();
