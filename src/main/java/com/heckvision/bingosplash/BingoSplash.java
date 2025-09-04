@@ -38,7 +38,7 @@ public class BingoSplash
 //$$ implements ModInitializer
 //#endif
 {
-    public static final String VERSION = "v0.0.5-beta";
+    public static final String VERSION = "v0.0.10-beta";
     public static final String NAME = "BingoSplash";
     public static final String MODID = "bingosplash";
     //#if MC==10809

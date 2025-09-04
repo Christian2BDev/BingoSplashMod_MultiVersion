@@ -119,26 +119,31 @@ public class UpdateManager {
 
     @SuppressWarnings("deprecation")
     public void downloadUpdate() {
-        MainTreadAPI.runOnMainThread(() -> {UScreen.displayScreen(null);});
-        String fileUrl = downloadUrl;
-        File targetFile = new File("mods", fileName);
-        try {
-            HttpURLConnection conn = (HttpURLConnection) new URL(fileUrl).openConnection();
-            conn.setRequestProperty("User-Agent", "BingoSplashMod");
+        new Thread(() -> {
+            MainTreadAPI.runOnMainThread(() -> {UScreen.displayScreen(null);});
+            String fileUrl = downloadUrl;
+            File targetFile = new File("mods", fileName);
+            try {
+                HttpURLConnection conn = (HttpURLConnection) new URL(fileUrl).openConnection();
+                conn.setRequestProperty("User-Agent", "BingoSplashMod");
 
-            try (InputStream in = conn.getInputStream();
-                 FileOutputStream out = new FileOutputStream(targetFile)) {
-                byte[] buffer = new byte[8192];
-                int len;
-                while ((len = in.read(buffer)) != -1) {
-                    out.write(buffer, 0, len);
+                try (InputStream in = conn.getInputStream();
+                     FileOutputStream out = new FileOutputStream(targetFile)) {
+                    byte[] buffer = new byte[8192];
+                    int len;
+                    while ((len = in.read(buffer)) != -1) {
+                        out.write(buffer, 0, len);
+                    }
                 }
+
+                MainTreadAPI.runOnMainThread(() -> {
+                    ChatAPI.SendMessage("§l§6[§r§lBingoSplash§r§l§6]§r successfully downloaded the update, available after restart!");
+                });
+                scheduleDeleteOldJar();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            MainTreadAPI.runOnMainThread(() -> {ChatAPI.SendMessage("§l§6[§r§lBingoSplash§r§l§6]§r successfully downloaded the update, available after restart!");});
-            deleteOldFile();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        }).start();
     }
 
     void getCorrectFile(JsonObject json) {
@@ -146,7 +151,14 @@ public class UpdateManager {
             JsonObject asset = json.getAsJsonArray("assets").get(i).getAsJsonObject();
             String name = asset.get("name").getAsString();
 
-            if (name.endsWith(".jar") && name.contains(UMinecraft.getMinecraft().getVersion())) {
+            //#if MC==10809
+            if (name.contains("1.8.9"))
+            //#endif
+
+            //#if MC==12105
+            // if (name.contains("1.21.5"))
+            //#endif
+                {
                 downloadUrl = asset.get("browser_download_url").getAsString();
                 fileName = name;
                 break;
@@ -154,20 +166,49 @@ public class UpdateManager {
         }
     }
 
-    void deleteOldFile(){
-        File oldJar = new File("mods/"+ BingoSplash.NAME+"-" +UMinecraft.getMinecraft().getVersion()+"-"+BingoSplash.VERSION+".jar");
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+//    void deleteOldFile(){
+//        File oldJar = new File("mods/"+ BingoSplash.NAME+"-" +UMinecraft.getMinecraft().getVersion()+"-"+BingoSplash.VERSION+".jar");
+//        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+//            try {
+//                if (oldJar.exists()) {
+//                    if (oldJar.delete()) {
+//                        System.out.println("Old JAR removed: " + oldJar.getName());
+//                    } else {
+//                        System.out.println("Failed to remove old JAR: " + oldJar.getName());
+//                    }
+//                }
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }));
+//    }
+
+    public void scheduleDeleteOldJar() {
+        File oldJar = new File("mods/" + BingoSplash.NAME + "-" +
+                UMinecraft.getMinecraft().getVersion() + "-" +
+                BingoSplash.VERSION + ".jar");
+
+        if (oldJar.exists()) {
+            oldJar.deleteOnExit(); // Works on Linux/Mac, but not reliable on Windows
+            // So: rename to temp and delete later
+            File marker = new File(oldJar.getAbsolutePath() + ".delete");
             try {
-                if (oldJar.exists()) {
-                    if (oldJar.delete()) {
-                        System.out.println("Old JAR removed: " + oldJar.getName());
-                    } else {
-                        System.out.println("Failed to remove old JAR: " + oldJar.getName());
-                    }
+                marker.createNewFile(); // marker tells next launch to delete the old jar
+            } catch (Exception ignored) {}
+        }
+    }
+
+    public void cleanupOldJars() {
+        File modsDir = new File("mods/");
+        File[] files = modsDir.listFiles((dir, name) -> name.endsWith(".delete"));
+        if (files != null) {
+            for (File marker : files) {
+                String target = marker.getAbsolutePath().replace(".delete", "");
+                File oldJar = new File(target);
+                if (oldJar.exists() && oldJar.delete()) {
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
+                marker.delete(); // cleanup marker
             }
-        }));
+        }
     }
 }

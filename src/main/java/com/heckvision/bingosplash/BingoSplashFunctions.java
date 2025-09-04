@@ -19,6 +19,7 @@ public class BingoSplashFunctions {
         new ProcessMessages();
         new CommandRegister();
         new OnServerJoinEvent();
+        UpdateManager.getInstance().cleanupOldJars();
     }
 
     /**
